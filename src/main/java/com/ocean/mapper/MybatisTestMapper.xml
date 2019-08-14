@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.mapper.MybatisTestMapper">
+  <resultMap id="BaseResultMap" type="com.ocean.entity.MybatisTest">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="testName" jdbcType="VARCHAR" property="testname" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from mybatistest
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ocean.entity.MybatisTest">
+    insert into mybatistest (id, testName)
+    values (#{id,jdbcType=VARCHAR}, #{testname,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ocean.entity.MybatisTest">
+    update mybatistest
+    set testName = #{testname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, testName
+    from mybatistest
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, testName
+    from mybatistest
+  </select>
+</mapper>
