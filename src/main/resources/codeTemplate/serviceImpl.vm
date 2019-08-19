@@ -68,7 +68,7 @@ public class ${name}ServiceImpl implements ${name}Service{
 
     @Override
     public PageInfo<${name}> query(int pageNum, int pageSize, HashMap<String, Object> paramMap) {
-        PageHelper.startPage(pageNum, pageSize)
+        PageHelper.startPage(pageNum, pageSize);
 
         return new PageInfo<>(mapper.query(paramMap));
     }

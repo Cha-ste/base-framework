@@ -1,0 +1,46 @@
+mybatis:
+  mapper-locations: classpath*:com/ocean/mapper/*Mapper.xml #对应你的mapper.xml映射文件
+  type-aliases-package: com.ocean.entity #对应实体类
+
+logging:
+  # logback.xml路径，默认为classpath:logback.xml
+  config: classpath:lockback.xml
+#security:
+#  sessions: always
+# redis:
+#   single:
+#     host: 127.0.0.1
+#     port: 6379
+#   cluster:
+#     address: 127.0.0.1:20001,127.0.0.1:20002,127.0.0.1:20003
+#     timeout: 300000
+#     maxRedirections: 6
+#   pool:
+#     maxWaitMillis: -1
+#     maxTotal: 1000
+#     maxIdle: 9
+#     minIdle: 100
+
+#  session:
+#    store-type: none
+#redis:
+#  # cluster:
+#  #   nodes: 127.0.0.1:20001,127.0.0.1:20002,127.0.0.1:20003
+#  host: 127.0.0.1
+#  port: 6379
+#  http:
+#    multipart.max-file-size: 100Mb
+#    encoding:
+#      force: true
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#  resources:
+#    cache-period: 3600000
+#  rabbitmq:
+#    host: 127.0.0.1
+#    port: 5672
+#    username: admin
+#    password: admin
+#    virtual-host: /
+#    publisher-confirms: true
+

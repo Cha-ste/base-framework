@@ -54,14 +54,14 @@ public class ${name}Controller {
         logger.info("pageNum:{},pageSize:{},param:{}", pageNum, pageSize, param);
         ResultBean<PageInfo<${name}>> resultBean = new ResultBean<>();
         HashMap<String, Object> paramMap = new HashMap<>();
-        if (StringUtils.isNotEmpty(param)) {
+        if (StringUtils.isEmpty(param)) {
             try {
                 paramMap = new ObjectMapper().readValue(param, HashMap.class);
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }
         }else{
-            paramMap.put("order by","id desc");
+            paramMap.put("orderBy","id desc");
         }
         PageInfo<${name}> pageInfo = service.query(pageNum, pageSize, paramMap);
         int count = service.getCount();

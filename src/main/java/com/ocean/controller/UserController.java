@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import com.ocean.entity.MybatisTest;
-import com.ocean.service.MybatisTestService;
+import com.ocean.entity.User;
+import com.ocean.service.UserService;
 import com.ocean.vo.ResultBean;
 
 import java.io.IOException;
@@ -17,20 +17,20 @@ import java.util.HashMap;
 import java.util.List;
 import com.github.pagehelper.PageInfo;
 
-@RestController("MybatisTestController")
-@RequestMapping("/MybatisTest")
-public class MybatisTestController {
+@RestController("UserController")
+@RequestMapping("/User")
+public class UserController {
 
-    public static Logger logger = LoggerFactory.getLogger(MybatisTestController.class);
+    public static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private MybatisTestService service;
+    private UserService service;
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResultBean<MybatisTest> get(String id) {
-        ResultBean<MybatisTest> resultBean = new ResultBean<>();
+    public ResultBean<User> get(@RequestParam String id) {
+        ResultBean<User> resultBean = new ResultBean<>();
         try {
-            MybatisTest entity=service.getMybatisTest(id);
+            User entity=service.getUser(id);
             resultBean.setCode(ResultBean.SUCCESS);
             resultBean.setData(entity);
         } catch (Exception e) {
@@ -47,23 +47,23 @@ public class MybatisTestController {
     @GetMapping(value = "query/{pageNum}/{pageSize}")
     @ResponseBody
     @SuppressWarnings("unchecked")
-    public ResultBean<PageInfo<MybatisTest>> query(
+    public ResultBean<PageInfo<User>> query(
         @PathVariable int pageNum,
         @PathVariable int pageSize,
         @RequestParam(required = false) String param) {
         logger.info("pageNum:{},pageSize:{},param:{}", pageNum, pageSize, param);
-        ResultBean<PageInfo<MybatisTest>> resultBean = new ResultBean<>();
+        ResultBean<PageInfo<User>> resultBean = new ResultBean<>();
         HashMap<String, Object> paramMap = new HashMap<>();
-        if (StringUtils.isNotEmpty(param)) {
+        if (StringUtils.isEmpty(param)) {
             try {
                 paramMap = new ObjectMapper().readValue(param, HashMap.class);
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }
         }else{
-            paramMap.put("order by","id desc");
+            paramMap.put("orderBy","id desc");
         }
-        PageInfo<MybatisTest> pageInfo = service.query(pageNum, pageSize, paramMap);
+        PageInfo<User> pageInfo = service.query(pageNum, pageSize, paramMap);
         int count = service.getCount();
         resultBean.setCode(ResultBean.SUCCESS);
         resultBean.setData(pageInfo);
@@ -71,10 +71,10 @@ public class MybatisTestController {
     }
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResultBean save(@RequestBody MybatisTest model) {
+    public ResultBean save(@RequestBody User model) {
         ResultBean resultBean = new ResultBean();
         try {
-            MybatisTest record = new MybatisTest();
+            User record = new User();
             BeanUtils.copyProperties(model, record);
 
             if (record.getId() == null) {

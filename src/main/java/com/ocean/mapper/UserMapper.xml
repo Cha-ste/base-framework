@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.ocean.entity.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="UserName" jdbcType="VARCHAR" property="username" />
+    <result column="CT" jdbcType="TIMESTAMP" property="ct" />
+    <result column="Email" jdbcType="VARCHAR" property="email" />
+    <result column="Phone" jdbcType="VARCHAR" property="phone" />
+    <result column="Address" jdbcType="VARCHAR" property="address" />
+    <result column="Sex" jdbcType="VARCHAR" property="sex" />
+    <result column="BirthDay" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="Password" jdbcType="VARCHAR" property="password" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ocean.entity.User">
+    insert into user (id, UserName, CT, 
+      Email, Phone, Address, 
+      Sex, BirthDay, Password
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{ct,jdbcType=TIMESTAMP}, 
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, #{password,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ocean.entity.User">
+    update user
+    set UserName = #{username,jdbcType=VARCHAR},
+      CT = #{ct,jdbcType=TIMESTAMP},
+      Email = #{email,jdbcType=VARCHAR},
+      Phone = #{phone,jdbcType=VARCHAR},
+      Address = #{address,jdbcType=VARCHAR},
+      Sex = #{sex,jdbcType=VARCHAR},
+      BirthDay = #{birthday,jdbcType=TIMESTAMP},
+      Password = #{password,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, UserName, CT, Email, Phone, Address, Sex, BirthDay, Password
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, UserName, CT, Email, Phone, Address, Sex, BirthDay, Password
+    from user
+  </select>
+</mapper>

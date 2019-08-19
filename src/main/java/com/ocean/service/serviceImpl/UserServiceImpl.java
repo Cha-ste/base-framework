@@ -6,26 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
-import com.ocean.entity.MybatisTest;
-import com.ocean.service.MybatisTestService;
-import com.ocean.mapper.MybatisTestMapper;
+import com.ocean.entity.User;
+import com.ocean.service.UserService;
+import com.ocean.mapper.UserMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @Service
-public class MybatisTestServiceImpl implements MybatisTestService{
+public class UserServiceImpl implements UserService{
 
-    private static final Logger logger = LoggerFactory.getLogger(MybatisTestServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    private MybatisTestMapper mapper;
+    private UserMapper mapper;
 
     @Override
-    public MybatisTest getMybatisTest(String id) {
+    public User getUser(String id) {
 
-        MybatisTest model = mapper.selectByPrimaryKey(id);
+        User model = mapper.selectByPrimaryKey(1);
         if (model == null) {
-            logger.error("[getMybatisTest]delete MybatisTest id={} fail", id);
+            logger.error("[getUser]delete User id={} fail", id);
             throw new RuntimeException("GET data fail");
         }
         return model;
@@ -33,10 +33,10 @@ public class MybatisTestServiceImpl implements MybatisTestService{
     }
 
     @Override
-    public void save(MybatisTest model) {
+    public void save(User model) {
         int success = mapper.insertSelective(model);
         if (success <= 0) {
-            logger.error("[addMybatisTest]add MybatisTest={} fail",  model.toString());
+            logger.error("[addUser]add User={} fail",  model.toString());
             throw new RuntimeException("Add data fail");
         }
         return;
@@ -44,10 +44,10 @@ public class MybatisTestServiceImpl implements MybatisTestService{
     }
 
     @Override
-    public void update(MybatisTest model) {
+    public void update(User model) {
         int success = mapper.updateByPrimaryKeySelective(model);
         if (success <= 0) {
-            logger.error("[updateMybatisTest]update MybatisTest={} fail",  model.toString());
+            logger.error("[updateUser]update User={} fail",  model.toString());
             throw new RuntimeException("Modify data fail");
         }
         return;
@@ -59,7 +59,7 @@ public class MybatisTestServiceImpl implements MybatisTestService{
 
         int success = mapper.deleteByPrimaryKey(id);
         if (success <= 0) {
-            logger.error("[deleteMybatisTest]delete MybatisTest id={} fail", id);
+            logger.error("[deleteUser]delete User id={} fail", id);
             throw new RuntimeException("Del data fail");
         }
         return;
@@ -67,8 +67,8 @@ public class MybatisTestServiceImpl implements MybatisTestService{
     }
 
     @Override
-    public PageInfo<MybatisTest> query(int pageNum, int pageSize, HashMap<String, Object> paramMap) {
-        PageHelper.startPage(pageNum, pageSize)
+    public PageInfo<User> query(int pageNum, int pageSize, HashMap<String, Object> paramMap) {
+        PageHelper.startPage(pageNum, pageSize);
 
         return new PageInfo<>(mapper.query(paramMap));
     }
