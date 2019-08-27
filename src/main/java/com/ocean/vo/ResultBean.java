@@ -6,12 +6,13 @@ package com.ocean.vo;
  * @param <T>
  */
 public class ResultBean<T> {
-    public static int SUCCESS = 200; //请求已成功
-    public static int BAD_REQUEST = 400; //请求无效，参数个数或类型不正确
-    public static int FORBIDDEN = 403; //服务器已经理解请求，但是拒绝执行它
-    public static int NOT_FOUND = 404; //请求失败，请求所希望得到的资源未被在服务器上发现
-    public static int  NOT_ALLOWED= 405; //请求行中指定的请求方法不能被用于请求相应的资源(请求方式post、get)
-    public static int ERROR = 500;  //服务器错误
+    public static int NO_LOGIN = 10000; //用户未登录
+    public static int SUCCESS = 10001; //请求已成功,数据返回正确
+    public static int BAD_REQUEST = 10002; //请求无效，参数个数或类型不正确
+    public static int FORBIDDEN = 10003; //服务器已经理解请求，但是拒绝执行它，未登录
+    public static int NOT_FOUND = 10004; //请求失败，请求所希望得到的资源未被在服务器上发现
+    public static int  NOT_ALLOWED= 10005; //请求行中指定的请求方法不能被用于请求相应的资源(请求方式post、get)
+    public static int ERROR = -1;  //服务器错误
 
     private int code = 200;
     private String message;

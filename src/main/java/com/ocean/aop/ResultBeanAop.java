@@ -1,6 +1,7 @@
 package com.ocean.aop;
 
 import com.ocean.controller.UserController;
+import com.ocean.utils.TokenUtils;
 import com.ocean.vo.ResultBean;
 import org.apache.ibatis.type.TypeException;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -27,7 +28,7 @@ public class ResultBeanAop {
         try {
             resultBean = (ResultBean<?>) pjp.proceed();
             //add token to resultBean
-//            resultBean.setToken(TokenUtils.getToken());
+            resultBean.setToken(TokenUtils.genToken());
             logger.info(pjp.getSignature() + ", elapsed time: " + (System.currentTimeMillis() - startTime) + "ms");
         } catch (Throwable e) {
             resultBean = handlerException(pjp, e);
