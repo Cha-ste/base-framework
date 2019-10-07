@@ -5,6 +5,9 @@ mybatis:
 logging:
   # logback.xml路径，默认为classpath:logback.xml
   config: classpath:lockback.xml
+  level:
+    com.ocean.mapper: DEBUG
+
 #security:
 #  sessions: always
 # redis:

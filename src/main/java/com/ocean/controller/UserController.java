@@ -27,32 +27,23 @@ public class UserController {
     private UserService service;
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResultBean<User> get(@RequestParam String id) {
-        ResultBean<User> resultBean = new ResultBean<>();
+    public ResultBean<User> get(String id) {
         try {
             User entity=service.getUser(id);
-            resultBean.setCode(ResultBean.SUCCESS);
-            resultBean.setData(entity);
+            return ResultBean.success(entity);
         } catch (Exception e) {
-            resultBean.setCode(ResultBean.ERROR);
-            resultBean.setMessage("Fail:" + e.getMessage());
             logger.error("Fail:", e);
-            return resultBean;
+            return ResultBean.ERROR;
         }
-        resultBean.setCode(ResultBean.SUCCESS);
-        resultBean.setMessage("SUCCESS");
-        return resultBean;
     }
 
     @GetMapping(value = "query/{pageNum}/{pageSize}")
     @ResponseBody
     @SuppressWarnings("unchecked")
     public ResultBean<PageInfo<User>> query(
-        @PathVariable int pageNum,
-        @PathVariable int pageSize,
+        int pageNum,
+        int pageSize,
         @RequestParam(required = false) String param) {
-        logger.info("pageNum:{},pageSize:{},param:{}", pageNum, pageSize, param);
-        ResultBean<PageInfo<User>> resultBean = new ResultBean<>();
         HashMap<String, Object> paramMap = new HashMap<>();
         if (StringUtils.isEmpty(param)) {
             try {
@@ -64,15 +55,11 @@ public class UserController {
             paramMap.put("orderBy","id desc");
         }
         PageInfo<User> pageInfo = service.query(pageNum, pageSize, paramMap);
-        int count = service.getCount();
-        resultBean.setCode(ResultBean.SUCCESS);
-        resultBean.setData(pageInfo);
-        return resultBean;
+        return ResultBean.success(pageInfo);
     }
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean save(@RequestBody User model) {
-        ResultBean resultBean = new ResultBean();
         try {
             User record = new User();
             BeanUtils.copyProperties(model, record);
@@ -85,30 +72,21 @@ public class UserController {
             }
 
         } catch (Exception e) {
-            resultBean.setData(ResultBean.ERROR);
-            resultBean.setMessage("Fail:" + e.getMessage());
             logger.error("Fail:", e);
-            return resultBean;
+            return ResultBean.ERROR;
         }
-        resultBean.setData(ResultBean.SUCCESS);
-        resultBean.setMessage("SUCCESS");
-        return resultBean;
+        return ResultBean.success("保存成功");
     }
 
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean del(String id) {
-        ResultBean resultBean = new ResultBean();
         try {
             service.del(id);
         } catch (Exception e) {
-            resultBean.setCode(ResultBean.ERROR);
-            resultBean.setMessage("Fail:" + e.getMessage());
             logger.error("Fail:", e);
-            return resultBean;
+            return ResultBean.ERROR;
         }
-        resultBean.setCode(ResultBean.SUCCESS);
-        resultBean.setMessage("SUCCESS");
-        return resultBean;
+        return ResultBean.success("删除成功");
     }
 
 }

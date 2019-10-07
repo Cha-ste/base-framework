@@ -28,31 +28,22 @@ public class ${name}Controller {
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean<${name}> get(${primaryType} ${primaryKey}) {
-        ResultBean<${name}> resultBean = new ResultBean<>();
         try {
             ${name} entity=service.get${name}(id);
-            resultBean.setCode(ResultBean.SUCCESS);
-            resultBean.setData(entity);
+            return ResultBean.success(entity);
         } catch (Exception e) {
-            resultBean.setCode(ResultBean.ERROR);
-            resultBean.setMessage("Fail:" + e.getMessage());
             logger.error("Fail:", e);
-            return resultBean;
+            return ResultBean.ERROR;
         }
-        resultBean.setCode(ResultBean.SUCCESS);
-        resultBean.setMessage("SUCCESS");
-        return resultBean;
     }
 
     @GetMapping(value = "query/{pageNum}/{pageSize}")
     @ResponseBody
     @SuppressWarnings("unchecked")
     public ResultBean<PageInfo<${name}>> query(
-        @PathVariable int pageNum,
-        @PathVariable int pageSize,
+        int pageNum,
+        int pageSize,
         @RequestParam(required = false) String param) {
-        logger.info("pageNum:{},pageSize:{},param:{}", pageNum, pageSize, param);
-        ResultBean<PageInfo<${name}>> resultBean = new ResultBean<>();
         HashMap<String, Object> paramMap = new HashMap<>();
         if (StringUtils.isEmpty(param)) {
             try {
@@ -64,15 +55,11 @@ public class ${name}Controller {
             paramMap.put("orderBy","id desc");
         }
         PageInfo<${name}> pageInfo = service.query(pageNum, pageSize, paramMap);
-        int count = service.getCount();
-        resultBean.setCode(ResultBean.SUCCESS);
-        resultBean.setData(pageInfo);
-        return resultBean;
+        return ResultBean.success(pageInfo);
     }
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean save(@RequestBody ${name} model) {
-        ResultBean resultBean = new ResultBean();
         try {
             ${name} record = new ${name}();
             BeanUtils.copyProperties(model, record);
@@ -85,30 +72,21 @@ public class ${name}Controller {
             }
 
         } catch (Exception e) {
-            resultBean.setData(ResultBean.ERROR);
-            resultBean.setMessage("Fail:" + e.getMessage());
             logger.error("Fail:", e);
-            return resultBean;
+            return ResultBean.ERROR;
         }
-        resultBean.setData(ResultBean.SUCCESS);
-        resultBean.setMessage("SUCCESS");
-        return resultBean;
+        return ResultBean.success("保存成功");
     }
 
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean del(${primaryType} ${primaryKey}) {
-        ResultBean resultBean = new ResultBean();
         try {
             service.del(${primaryKey});
         } catch (Exception e) {
-            resultBean.setCode(ResultBean.ERROR);
-            resultBean.setMessage("Fail:" + e.getMessage());
             logger.error("Fail:", e);
-            return resultBean;
+            return ResultBean.ERROR;
         }
-        resultBean.setCode(ResultBean.SUCCESS);
-        resultBean.setMessage("SUCCESS");
-        return resultBean;
+        return ResultBean.success("删除成功");
     }
 
 }

@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User getUser(String id) {
 
-        User model = mapper.selectByPrimaryKey(1);
+        User model = mapper.selectByPrimaryKey(Integer.valueOf(id));
         if (model == null) {
             logger.error("[getUser]delete User id={} fail", id);
             throw new RuntimeException("GET data fail");
@@ -83,4 +83,8 @@ public class UserServiceImpl implements UserService{
         return mapper.queryCount(paramMap);
     }
 
+    @Override
+    public User getUserByMobile(String mobile) {
+        return mapper.getUserByMobile(mobile);
+    }
 }

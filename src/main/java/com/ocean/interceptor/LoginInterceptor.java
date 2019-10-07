@@ -2,11 +2,17 @@ package com.ocean.interceptor;
 
 
 import com.alibaba.fastjson.JSON;
+import com.ocean.redis.RedisService;
+import com.ocean.redis.UserPrefix;
+import com.ocean.utils.Constants;
 import com.ocean.utils.TokenUtils;
+import com.ocean.vo.CodeMsg;
 import com.ocean.vo.ResultBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +23,10 @@ import java.io.PrintWriter;
 
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
-    Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
+    private Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -26,31 +35,20 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
-        if(token==null||token.equals("")){
+        if(StringUtils.isEmpty(token)){
             logger.info("用户未登录");
-            printJson(response, ResultBean.NO_LOGIN, "用户未登录", "用户未登录");
+            printJson(response, CodeMsg.NO_LOGIN);
             return false;
         }
 
-        if (!TokenUtils.validate(token)) {
-            printJson(response, ResultBean.NO_LOGIN, "用户未登录", "token非法或已过期");
+        if (!validToken(token)) {
+            printJson(response, CodeMsg.TOKEN_EXPIRED);
             return false;
         }
-//        User user = (User)getRedisService().get(REDIS_USER_SESSION_KEY+":"+token);
-//        if(user==null){
-//            printJson(response, "");
-//            return false;
-//        }
-//        String userId = user.getId();
-//        User sqlUser = getUserService().getUserById(userId);
-//        String enterpriseId =  getUserEnterpriseService().selectEnterpriseByUser(userId);
-//        if(enterpriseId==null){
-//            getRedisService().set(REDIS_USER_SESSION_KEY+":"+token,sqlUser,SSO_SESSION_EXPIRE);
-//            return true;
-//        }
-//        Enterprise sqlEnterprise = getEnterpriseService().selectEnterpriseById(enterpriseId);
-//        getRedisService().set(REDIS_USER_SESSION_KEY+":"+token,sqlUser,SSO_SESSION_EXPIRE);
-//        getRedisService().set(REDIS_ENTERPRISE_SESSION_KEY+":"+token,sqlEnterprise,SSO_SESSION_EXPIRE);
+
+        //延迟token过期时间
+        delayExpired(token);
+
         return true;
     }
 
@@ -69,9 +67,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         response.setHeader("Access-Control-Max-Age", "3600");
     }
 
-    private static void printJson(HttpServletResponse response, int code, String message, Object data) {
-        ResultBean resultBean = new ResultBean(code,message,data);
-        String content = JSON.toJSONString(resultBean);
+    private static void printJson(HttpServletResponse response, CodeMsg codeMsg) {
+        String content = JSON.toJSONString(ResultBean.error(codeMsg));
         printContent(response, content);
     }
 
@@ -90,18 +87,14 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
     }
 
-//    private EnterpriseService getEnterpriseService(){
-//        return SpringContextHolder.getBean(EnterpriseService.class);
-//    }
-//    private RedisService getRedisService(){
-//        return SpringContextHolder.getBean(RedisService.class);
-//    }
-//
-//    private UserEnterpriseService getUserEnterpriseService(){
-//        return SpringContextHolder.getBean(UserEnterpriseService.class);
-//    }
-//
-//    private UserService getUserService(){
-//        return SpringContextHolder.getBean(UserService.class);
-//    }
+    private Boolean validToken(String token) {
+        String userId = redisService.get(UserPrefix.getByToken, token, String.class);
+        return !StringUtils.isEmpty(userId);
+    }
+
+    private void delayExpired(String token) {
+        String userId = redisService.get(UserPrefix.getByToken, token, String.class);
+        redisService.set(UserPrefix.getByToken, token, userId, Constants.TOKEN_EXPIRED_SECOND);
+    }
+
 }

@@ -21,4 +21,5 @@ public interface UserService {
     PageInfo<User> query(int currentPage, int itemsPerPage, HashMap<String, Object> paramMap);
     int queryCount(HashMap<String, Object> paramMap);
 
+    User getUserByMobile(String mobile);
 }

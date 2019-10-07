@@ -2,6 +2,7 @@ package com.ocean.baseframework;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ocean.baseframework.thread.ThreadDemo;
 import com.ocean.utils.JedisUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,13 @@ public class BaseFrameworkApplicationTests {
 	@Test
 	public void testJedis() {
 		System.out.println(JedisUtils.getJedis().ping());
-
 	}
+
+	@Test
+	public void testMybatis () {
+		
+	}
+
+
 
 }

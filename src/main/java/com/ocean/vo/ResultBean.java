@@ -6,60 +6,70 @@ package com.ocean.vo;
  * @param <T>
  */
 public class ResultBean<T> {
-    public static int NO_LOGIN = 10000; //用户未登录
-    public static int SUCCESS = 10001; //请求已成功,数据返回正确
-    public static int BAD_REQUEST = 10002; //请求无效，参数个数或类型不正确
-    public static int FORBIDDEN = 10003; //服务器已经理解请求，但是拒绝执行它，未登录
-    public static int NOT_FOUND = 10004; //请求失败，请求所希望得到的资源未被在服务器上发现
-    public static int  NOT_ALLOWED= 10005; //请求行中指定的请求方法不能被用于请求相应的资源(请求方式post、get)
-    public static int ERROR = -1;  //服务器错误
-
-    private int code = 200;
-    private String message;
+    private int code;
+    private String msg;
     private T data;
-    private String token;
 
-    public ResultBean() {}
+    public static ResultBean ERROR = new ResultBean(CodeMsg.SERVER_ERROR);
 
-    public ResultBean(T data) {
+    private ResultBean(T data) {
+        code = 1;
+        msg = "success";
         this.data = data;
     }
 
-    public ResultBean(int code, String message, T data) {
-        this.code = code;
-        this.message = message;
-        this.data = data;
+    private ResultBean(CodeMsg codeMsg) {
+        if(codeMsg == null) {
+            return;
+        }
+        code = codeMsg.getCode();
+        msg = codeMsg.getMsg();
     }
+
+    /**
+     * 成功时调用
+     *
+     * @param data 返回数据
+     * @param <T> 类型
+     * @return 统一响应结果
+     */
+    public static <T>ResultBean<T> success(T data) {
+        return new ResultBean<>(data);
+    }
+
+    /**
+     * 异常时调用
+     *
+     * @param codeMsg 状态码&信息对象
+     * @param <T> 类型
+     * @return 统一响应结果
+     */
+    public static <T>ResultBean<T> error(CodeMsg codeMsg) {
+        return new ResultBean<>(codeMsg);
+    }
+
+    /**
+     * 服务器异常，自定义错误信息
+     * @param msg 错误信息
+     * @param <T> 类型
+     * @return 统一响应结果
+     */
+    public static <T>ResultBean<T> errorMsg(String msg) {
+        CodeMsg codeMsg = new CodeMsg(500100, msg);
+        return error(codeMsg);
+    }
+
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public String getMsg() {
+        return msg;
     }
 
     public T getData() {
         return data;
     }
 
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

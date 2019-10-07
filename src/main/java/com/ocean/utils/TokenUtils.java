@@ -1,11 +1,14 @@
 package com.ocean.utils;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.ocean.redis.RedisService;
+import com.ocean.redis.UserPrefix;
+import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,91 +17,115 @@ import java.util.Map;
 /**
  * Token工具类
  */
+@Component
 public class TokenUtils {
-    private static final long EXPIRED_TIMES = 1000*60*30; //token有效时间为30分钟
-    private static final int EXPIRED_SECOND = 60*30; //token有效时间为30分钟
-    private static final String  SECRET = "ocean_secret";
+    private static final String  SECRET = "shuXieChuanQiCongWoKaiShi2019999";
+    private static final String  VALID = "valid";
+    private static final String  EXPIRED = "expired";
+    private static final String  INVALID = "invalid";
 
-    //发布者 后面一块去校验
-    private static final String  ISSUER = "mooc_user";
+    @Autowired
+    private static RedisService redisService;
+
+    private static final JWSHeader header=new JWSHeader(JWSAlgorithm.HS256, JOSEObjectType.JWT, null, null, null, null, null, null, null, null, null, null, null);
 
     /**
-     * 生成token的操作
+     * 生成token，该方法只在用户登录成功后调用
+     *
+     * @param payload Map集合，可以存储用户id，token生成时间，token过期时间等自定义字段
+     * @return token字符串,若失败则返回null
      */
-    public static String genToken(){
-        Map<String, String> claims  = new HashMap<>();
-        long startTime = System.currentTimeMillis();
-        long expiredTime = startTime + EXPIRED_TIMES;
-        claims.put("startTime", String.valueOf(startTime));
-        claims.put("expiredTime", String.valueOf(expiredTime));
-
+    public static String createToken(Map<String, Object> payload) {
+        String tokenString=null;
+        // 创建一个 JWS object
+        JWSObject jwsObject = new JWSObject(header, new Payload(new JSONObject(payload)));
         try {
-            //签名算法
-            Algorithm algorithm = Algorithm.HMAC256(SECRET);
+            // 将jwsObject 进行HMAC签名
+            jwsObject.sign(new MACSigner(SECRET));
 
-            JWTCreator.Builder builder = JWT.create().withIssuer(ISSUER)
-                    .withExpiresAt(DateUtils.addDays(new Date(), 1));
-            //相当于将claims存储在token中
-            claims.forEach((k,v) -> builder.withClaim(k, v));
-            String token = builder.sign(algorithm).toString();
-
-//            JedisUtils.setListExpired("token", EXPIRED_SECOND, token);
-            JedisUtils.setList("token", token);
-
-            return token;
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            tokenString=jwsObject.serialize();
+        } catch (JOSEException e) {
+            System.err.println("签名失败:" + e.getMessage());
+            e.printStackTrace();
         }
+        return tokenString;
+    }
+
+//    public static String genToken() {
+//
+//    }
+
+
+    /**
+     * 验证token
+     */
+    public static Boolean validToken(String token) {
+        String value = redisService.get(UserPrefix.getByToken, token, String.class);
+        return StringUtils.isEmpty(value);
     }
 
     /**
-     * 获取token中的 playLoad
+     * 校验token是否合法
      *
-     * @param token
-     * @return
+     * @param token 字符串
+     * @return token状态
      */
-    public static Map<String, String> verifyToken(String token)  {
-        Algorithm algorithm = null;
-        try {
-            algorithm = Algorithm.HMAC256(SECRET);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        }
-        JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISSUER).build();
-        DecodedJWT jwt =  verifier.verify(token);
-        Map<String, Claim> map = jwt.getClaims();
-        Map<String, String> resultMap = new HashMap<>();
-        map.forEach((k,v) -> resultMap.put(k, v.asString()));
+    /*public static boolean validate(String token) {
+        Map<String, Object> payload = validToken(token);
+        String state = (String)payload.get("state");
 
+        switch (state) {
+            case VALID:
+                return true;
+            case EXPIRED:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    private static Map<String, Object> validToken(String token) {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            JWSObject jwsObject = JWSObject.parse(token);
+            Payload payload = jwsObject.getPayload();
+            JWSVerifier verifier = new MACVerifier(SECRET);
+
+            if (jwsObject.verify(verifier)) {
+                JSONObject jsonOBj = payload.toJSONObject();
+                // token校验成功（此时没有校验是否过期）
+                resultMap.put("state", VALID);
+                // 若payload包含ext字段，则校验是否过期
+                if (jsonOBj.containsKey("ext")) {
+                    long extTime = Long.valueOf(jsonOBj.get("ext").toString());
+                    long curTime = new Date().getTime();
+                    // 过期了
+                    if (curTime > extTime) {
+                        resultMap.clear();
+                        resultMap.put("state", EXPIRED);
+                    }
+                }
+                resultMap.put("data", jsonOBj);
+
+            } else {
+                // 校验失败
+                resultMap.put("state", INVALID);
+            }
+
+        } catch (Exception e) {
+            //e.printStackTrace();
+            // token格式不合法导致的异常
+            resultMap.clear();
+            resultMap.put("state", INVALID);
+        }
         return resultMap;
-    }
+    }*/
 
-    /**
-     * 校验token是否过期
-     *
-     * @param token
-     * @return
-     */
-    public static boolean validate(String token) {
-        if (token == null || "".equals(token)) {
-            return false;
-        }
-
-        Long count = JedisUtils.delList("token", token);
-        if (count < 1) {
-            return false;
-        }
-
-        Map<String, String> claim = verifyToken(token);
-        long startTime = Long.parseLong(claim.get("startTime"));
-        long expiredTime = Long.parseLong(claim.get("expiredTime"));
-
-        if (startTime > System.currentTimeMillis()
-                || expiredTime < System.currentTimeMillis()) {
-            return false;
-        }
-
-        return true;
+    public static boolean updateExp(String token) {
+        String redisToken = JedisUtils.getString(token);
+        if (redisToken == null) return false;
+        long expiredTime = Long.parseLong(redisToken);
+        return expiredTime <= System.currentTimeMillis();
     }
 
 }
