@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     /**
      * 其他异常
      */
-    @ExceptionHandler  //处理其他异常
+//    @ExceptionHandler  //处理其他异常
     public ResultBean<String> allExceptionHandler(Exception e) {
 
         if(e instanceof BindException) {
@@ -73,6 +73,7 @@ public class GlobalExceptionHandler {
             return ResultBean.error(CodeMsg.BIND_ERROR.fillArgs(msg));
         } else {
             int count = 0; //只打印15行的错误堆栈
+            logger.error("具体错误信息:");
             for (StackTraceElement stackTraceElement : e.getStackTrace()) {
                 logger.error(stackTraceElement.toString());
                 if (count++ > 13) break;

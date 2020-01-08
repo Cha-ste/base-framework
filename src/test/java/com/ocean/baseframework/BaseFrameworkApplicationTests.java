@@ -3,6 +3,7 @@ package com.ocean.baseframework;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ocean.baseframework.thread.ThreadDemo;
+import com.ocean.common.RoleEnum;
 import com.ocean.entity.UserInfo;
 import com.ocean.mapper.back.UserInfoMapper;
 import com.ocean.utils.JedisUtils;
@@ -48,6 +49,12 @@ public class BaseFrameworkApplicationTests {
 		System.out.println(userInfo.toString());
 	}
 
+	@Test
+	public void testEnum() {
+		System.out.println(RoleEnum.valueOf("ORDER_ADMIN_ROLE").op());
+		System.out.println(RoleEnum.MENU_ADMIN_ROLE.name());
 
+
+	}
 
 }

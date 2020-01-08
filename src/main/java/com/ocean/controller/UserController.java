@@ -1,6 +1,10 @@
 package com.ocean.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageInfo;
+import com.ocean.entity.User;
+import com.ocean.service.UserService;
+import com.ocean.vo.ResultBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -8,17 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import com.ocean.entity.User;
-import com.ocean.service.UserService;
-import com.ocean.vo.ResultBean;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import com.github.pagehelper.PageInfo;
 
 @RestController("UserController")
-@RequestMapping("/User")
+@RequestMapping("/user")
 public class UserController {
 
     public static Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -89,4 +89,8 @@ public class UserController {
         return ResultBean.success("删除成功");
     }
 
+    @RequestMapping("/test")
+    public ResultBean<String> parseDate(Date date, String str) {
+        return ResultBean.success(date.toString() + "<:>" + str);
+    }
 }

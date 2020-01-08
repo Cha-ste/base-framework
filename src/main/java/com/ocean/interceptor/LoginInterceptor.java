@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSON;
 import com.ocean.redis.RedisService;
 import com.ocean.redis.UserPrefix;
 import com.ocean.utils.Constants;
-import com.ocean.utils.TokenUtils;
 import com.ocean.vo.CodeMsg;
 import com.ocean.vo.ResultBean;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     private RedisService redisService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getParameter("token");
         //如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {

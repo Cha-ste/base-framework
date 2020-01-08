@@ -55,7 +55,7 @@ public class PrimaryDataBaseConfig {
     private int maxPoolPreparedStatementPerConnectionSize;
 
     // 主数据源使用@Primary注解进行标识
-//    @Primary
+    @Primary
     @Bean(name = "primaryDataSource")
     public DataSource primaryDataSource() throws SQLException {
         DruidDataSource druid = new DruidDataSource();
@@ -96,14 +96,14 @@ public class PrimaryDataBaseConfig {
     }
 
     // 创建该数据源的事务管理
-//    @Primary
+    @Primary
     @Bean(name = "primaryTransactionManager")
     public DataSourceTransactionManager primaryTransactionManager() throws SQLException {
         return new DataSourceTransactionManager(primaryDataSource());
     }
 
     // 创建Mybatis的连接会话工厂实例
-//    @Primary
+    @Primary
     @Bean(name = "primarySqlSessionFactory")
     public SqlSessionFactory primarySqlSessionFactory(@Qualifier("primaryDataSource") DataSource primaryDataSource) throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
