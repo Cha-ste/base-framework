@@ -1,6 +1,8 @@
 package com.ocean.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +21,7 @@ import com.github.pagehelper.PageInfo;
 
 @RestController("UserController")
 @RequestMapping("/User")
+@Api(tags = "用户相关接口")
 public class UserController {
 
     public static Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -26,6 +29,7 @@ public class UserController {
     @Autowired
     private UserService service;
 
+    @ApiOperation(value = "获取用户")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean<User> get(String id) {
         try {
@@ -37,6 +41,7 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "搜索用户")
     @GetMapping(value = "query/{pageNum}/{pageSize}")
     @ResponseBody
     @SuppressWarnings("unchecked")
@@ -58,6 +63,7 @@ public class UserController {
         return ResultBean.success(pageInfo);
     }
 
+    @ApiOperation(value = "保存用户")
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean save(@RequestBody User model) {
         try {
@@ -78,6 +84,7 @@ public class UserController {
         return ResultBean.success("保存成功");
     }
 
+    @ApiOperation(value = "删除用户")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean del(String id) {
         try {

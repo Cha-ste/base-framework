@@ -39,11 +39,10 @@
 </style>
 <body>
     <div class="login-content">
-
         <div class="form-box">
             <h3>鬼谷子学习院</h3>
             <div class="text-box">
-                <label>账号：</label><input type="text" id="userName" class="input-box">
+                <label>账号：</label><input type="text" id="mobile" class="input-box">
             </div>
             <div class="text-box">
                 <label>密码：</label><input type="password" id="password" class="input-box">
@@ -59,13 +58,13 @@
     });
 
     function login() {
-        var userName = $("#userName").val();
+        var mobile = $("#mobile").val();
         var password = $("#password").val();
         $.ajax({
             type: "GET",
             url: 'http://localhost:8080/login',
             data: {
-                'userName': userName,
+                'mobile': mobile,
                 'password': password
             },
             dataType: "json",
