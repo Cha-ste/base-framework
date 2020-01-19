@@ -6,23 +6,29 @@
 */
 package com.ocean.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "用户对象", description = "定义对象的基本信息")
 public class User {
     private String id;
 
+    @ApiModelProperty("用户名")
     private String username;
 
+    @ApiModelProperty("用户名")
     private String password;
-
+    @ApiModelProperty("头像")
     private String faceImage;
-
+    @ApiModelProperty("昵称")
     private String nickname;
-
+    @ApiModelProperty("粉丝数")
     private Integer fansCounts;
-
+    @ApiModelProperty("用户名")
     private Integer followCounts;
-
+    @ApiModelProperty("点赞数")
     private Integer receiveLikeCounts;
-
+    @ApiModelProperty("手机")
     private String mobile;
 
     public String getId() {

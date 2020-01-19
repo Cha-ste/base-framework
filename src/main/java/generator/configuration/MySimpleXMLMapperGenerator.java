@@ -1,6 +1,6 @@
 package generator.configuration;
 
-import com.mysql.jdbc.Messages;
+import com.mysql.cj.Messages;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -9,8 +9,6 @@ import org.mybatis.generator.api.FullyQualifiedTable;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.SimpleXMLMapperGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.AbstractXmlElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.DeleteByPrimaryKeyElementGenerator;
 
 import java.io.*;
 import java.util.HashMap;

@@ -1,20 +1,12 @@
 package com.ocean.config;
 
-import com.ocean.converter.StringToDateConverter;
-import com.ocean.converter.TestConverter;
 import com.ocean.interceptor.LoginInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistry;
-import org.springframework.format.support.FormattingConversionServiceFactoryBean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
-import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.Set;
 
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
@@ -22,8 +14,9 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor())
-                .addPathPatterns("/**").
-                excludePathPatterns("/login");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
         //多个拦截器
 //        registry.addInterceptor(loginInterceptor());
         super.addInterceptors(registry);
@@ -34,17 +27,30 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return new LoginInterceptor();
     }
 
-    @Bean
-    public StringToDateConverter stringToDateConverter() {
-        return new StringToDateConverter();
+    /**
+     * 防止@EnableMvc把默认的静态资源路径覆盖了，手动设置的方式
+     *
+     * @param registry
+     */
+    @Override
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 解决静态资源无法访问
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        // 解决swagger无法访问
+        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        // 解决swagger的js文件无法访问
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    @Resource
-    TestConverter converter;
-    // 注册转换器
     @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(stringToDateConverter());
-        registry.addConverter(converter);
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*", "null")
+                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
+                .maxAge(3600)
+                .allowCredentials(true);
     }
+
 }

@@ -9,6 +9,7 @@ import com.ocean.utils.TokenUtils;
 import com.ocean.vo.CodeMsg;
 import com.ocean.vo.LoginVo;
 import com.ocean.vo.ResultBean;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/")
+@Api(value="登录接口", tags = "登录接口")
 public class LoginController {
     @Autowired
     UserService userService;

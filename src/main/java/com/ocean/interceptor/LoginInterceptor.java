@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
-@Component
 public class LoginInterceptor implements HandlerInterceptor {
     private Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
 

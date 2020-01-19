@@ -1,13 +1,14 @@
 package generator.configuration;
 
-import com.mysql.jdbc.Messages;
+import com.mysql.cj.Messages;
 import generator.bean.FileUrl;
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.codegen.mybatis3.javamapper.SimpleJavaClientGenerator;
 import org.mybatis.generator.internal.util.StringUtility;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySimpleJavaClientGenerator extends SimpleJavaClientGenerator {
 

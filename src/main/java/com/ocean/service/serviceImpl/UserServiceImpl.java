@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
-import java.util.List;
+
 import com.ocean.entity.User;
 import com.ocean.service.UserService;
-import com.ocean.mapper.UserMapper;
+import com.ocean.mapper.primary.UserMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 

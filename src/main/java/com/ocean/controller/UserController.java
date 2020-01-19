@@ -1,10 +1,8 @@
 package com.ocean.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.pagehelper.PageInfo;
-import com.ocean.entity.User;
-import com.ocean.service.UserService;
-import com.ocean.vo.ResultBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -12,13 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import com.ocean.entity.User;
+import com.ocean.service.UserService;
+import com.ocean.vo.ResultBean;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import com.github.pagehelper.PageInfo;
 
 @RestController("UserController")
-@RequestMapping("/user")
+@RequestMapping("/User")
+@Api(tags = "用户相关接口")
 public class UserController {
 
     public static Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -26,6 +29,7 @@ public class UserController {
     @Autowired
     private UserService service;
 
+    @ApiOperation(value = "获取用户")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean<User> get(String id) {
         try {
@@ -37,6 +41,7 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "搜索用户")
     @GetMapping(value = "query/{pageNum}/{pageSize}")
     @ResponseBody
     @SuppressWarnings("unchecked")
@@ -58,6 +63,7 @@ public class UserController {
         return ResultBean.success(pageInfo);
     }
 
+    @ApiOperation(value = "保存用户")
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean save(@RequestBody User model) {
         try {
@@ -78,6 +84,7 @@ public class UserController {
         return ResultBean.success("保存成功");
     }
 
+    @ApiOperation(value = "删除用户")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean del(String id) {
         try {
@@ -89,8 +96,4 @@ public class UserController {
         return ResultBean.success("删除成功");
     }
 
-    @RequestMapping("/test")
-    public ResultBean<String> parseDate(Date date, String str) {
-        return ResultBean.success(date.toString() + "<:>" + str);
-    }
 }
