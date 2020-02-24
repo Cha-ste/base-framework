@@ -8,14 +8,14 @@ public class CodeMsg {
     private String msg;
 
 
-    //通用
+    //通用 符号 :%s 代表是可以接收参数
     public static CodeMsg NOT_ALLOWED = new CodeMsg(400100, "http请求方法不正确");
     public static CodeMsg BAD_REQUEST = new CodeMsg(400101, "http请求参数不全");
     public static CodeMsg ILLEGAL_ARGUMENT = new CodeMsg(400102, "参数非法");
     public static CodeMsg SUCCESS = new CodeMsg(0, "success");
     public static CodeMsg SERVER_ERROR = new CodeMsg(500100, "服务器异常");
     public static CodeMsg BIND_ERROR = new CodeMsg(500101, "参数校验异常:%s");
-    public static CodeMsg RECORD_NOT_FOUND = new CodeMsg(500102, "数据不存在");
+    public static CodeMsg RECORD_NOT_FOUND = new CodeMsg(500102, ":%s不存在");
 
 
     //登录模块 5002xx

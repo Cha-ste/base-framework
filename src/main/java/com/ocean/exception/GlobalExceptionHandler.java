@@ -59,6 +59,30 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 空指针异常
+     */
+    @ExceptionHandler(NullPointerException.class)
+    public ResultBean<String> nullPointerExceptionHandler(NullPointerException e) {
+        logger.error("空指针异常:【" + e.getMessage() + "】");
+        return ResultBean.error(CodeMsg.SERVER_ERROR);
+    }
+
+    /**
+     * 类型转换异常
+     */
+    @ExceptionHandler(ClassCastException.class)
+    public ResultBean<String> classCastExceptionHandler(ClassCastException e) {
+        logger.error("类型转换异常:【" + e.getMessage() + "】");
+        return ResultBean.error(CodeMsg.SERVER_ERROR);
+    }
+
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResultBean<String> recordNotFoundExceptionHandler(RecordNotFoundException e) {
+        logger.error(e.getMessage() + "不存在");
+        return ResultBean.error(CodeMsg.RECORD_NOT_FOUND.fillArgs(e.getMessage()));
+    }
+
+    /**
      * 其他异常
      */
     @ExceptionHandler  //处理其他异常
@@ -82,29 +106,6 @@ public class GlobalExceptionHandler {
         }
     }
 
-    /**
-     * 空指针异常
-     */
-    @ExceptionHandler(NullPointerException.class)
-    public ResultBean<String> nullPointerExceptionHandler(NullPointerException e) {
-        logger.error("空指针异常:【" + e.getMessage() + "】");
-        return ResultBean.error(CodeMsg.SERVER_ERROR);
-    }
-
-    /**
-     * 类型转换异常
-     */
-    @ExceptionHandler(ClassCastException.class)
-    public ResultBean<String> classCastExceptionHandler(ClassCastException e) {
-        logger.error("类型转换异常:【" + e.getMessage() + "】");
-        return ResultBean.error(CodeMsg.SERVER_ERROR);
-    }
-
-    @ExceptionHandler(RecordNotFoundException.class)
-    public ResultBean<String> recordNotFoundExceptionHandler(RecordNotFoundException e) {
-        logger.error("数据不存在:【" + e.getMessage() + "】");
-        return ResultBean.error(CodeMsg.RECORD_NOT_FOUND);
-    }
 
 
 }

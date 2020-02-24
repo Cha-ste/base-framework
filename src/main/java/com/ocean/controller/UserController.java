@@ -1,6 +1,7 @@
 package com.ocean.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ocean.vo.CodeMsg;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -87,12 +88,7 @@ public class UserController {
     @ApiOperation(value = "删除用户")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultBean del(String id) {
-        try {
-            service.del(id);
-        } catch (Exception e) {
-            logger.error("Fail:", e);
-            return ResultBean.ERROR;
-        }
+        service.del(id);
         return ResultBean.success("删除成功");
     }
 

@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService{
         User model = mapper.selectByPrimaryKey(Integer.valueOf(id));
         if (model == null) {
             logger.error("[getUser]delete User id={} fail", id);
-            throw new RecordNotFoundException();
+            throw new RecordNotFoundException("用户");
         }
         return model;
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService{
         int success = mapper.deleteByPrimaryKey(id);
         if (success <= 0) {
             logger.error("[deleteUser]delete User id={} fail", id);
-            throw new RuntimeException("Del data fail");
+            throw new RecordNotFoundException("会员");
         }
         return;
 
