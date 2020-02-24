@@ -1,5 +1,8 @@
 package com.ocean.common;
 
+/**
+ * 角色枚举类，其中运用了多态
+ */
 public enum RoleEnum implements RoleInterface {
 
     MENU_ADMIN_ROLE {
@@ -15,7 +18,7 @@ public enum RoleEnum implements RoleInterface {
         }
     };
 
-    public String getAdminRole (String name) {
+    public String getAdminRole(String name) {
         return RoleEnum.valueOf(name).op();
     }
 

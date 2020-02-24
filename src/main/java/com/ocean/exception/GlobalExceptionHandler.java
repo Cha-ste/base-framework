@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     /**
      * 其他异常
      */
-//    @ExceptionHandler  //处理其他异常
+    @ExceptionHandler  //处理其他异常
     public ResultBean<String> allExceptionHandler(Exception e) {
 
         if(e instanceof BindException) {
@@ -95,9 +95,16 @@ public class GlobalExceptionHandler {
      * 类型转换异常
      */
     @ExceptionHandler(ClassCastException.class)
-    public ResultBean<String> classCastExceptionHandler(NullPointerException e) {
+    public ResultBean<String> classCastExceptionHandler(ClassCastException e) {
         logger.error("类型转换异常:【" + e.getMessage() + "】");
         return ResultBean.error(CodeMsg.SERVER_ERROR);
     }
+
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResultBean<String> recordNotFoundExceptionHandler(RecordNotFoundException e) {
+        logger.error("数据不存在:【" + e.getMessage() + "】");
+        return ResultBean.error(CodeMsg.RECORD_NOT_FOUND);
+    }
+
 
 }

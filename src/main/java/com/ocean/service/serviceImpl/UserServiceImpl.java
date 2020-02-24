@@ -1,5 +1,6 @@
 package com.ocean.service.serviceImpl;
 
+import com.ocean.exception.RecordNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService{
         User model = mapper.selectByPrimaryKey(Integer.valueOf(id));
         if (model == null) {
             logger.error("[getUser]delete User id={} fail", id);
-            throw new RuntimeException("GET data fail");
+            throw new RecordNotFoundException();
         }
         return model;
 
